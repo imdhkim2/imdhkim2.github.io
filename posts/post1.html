@@ -9,16 +9,43 @@
 <body>
 
 <header>
-    <h1>🔥 My Dev Blog</h1>
+    <h1> Dhkim Blog</h1>
 </header>
 
 <div class="container">
     <div class="post">
-        <h2>첫 번째 글: 블로그 시작</h2>
-        <p class="date">2026-04-18</p>
+        <h2>lvm 생성</h2>
+        <p class="date">2026-04-19</p>
 
-        <p>여기에 본문 내용을 길게 작성하면 된다.</p>
-        <p>코드, 이미지, 정리 등 자유롭게 추가 가능</p>
+        <p> 
+            디스크 관리
+            fdisk /dev/sd : 특정 디스크 직접 편집(파티션 생성/삭제)
+            fdisk -l /dev/sdc : 읽기 전용으로 파티션 정보 조회
+            lsblk : 전체 블록 디바이스 구조를 트리 형태로 확인
+        </p>
+         <p> 
+            LVM 생성 순서
+             1. PV(Physical volume)
+                    (1) 조회: pvs,pvdisplay
+                    (2) 생성: pvcreate /dev/sd?
+                    *예시 pvcreate /dev/sd1
+             2. VG(Volume Group)
+                    (1) 조회: vgs,vgdisplay
+                    (2) 확장: vgextend vg명 /dev/sd? 
+                    (기존의 vg명을 가진 다른곳에 붙일때, 포맷 x)
+                    *예시 vgextend vg01 /dev/sdc1
+                    (3) 생성: vgextend vg명 /dev/sd?
+                    (새로 vg명을 생성할때, 포맷 필요)
+                    *예시 vgextend vg01 /dev/sdc1
+             3. LV(Logical volume)
+                    (1) 조회: lvs,lvdisplay
+                    (2) 확장: lvextend -l +100%FREE /dev/vg명/lv명
+                    (다른 곳에 붙일때 포맷 X, +100%FREE 용량 자신이 설정하기)
+                    (3) 생성: lvcreate 그룹명 -l +100%FREE /dev/vg명/lv명
+                    (새로 만들때, 포맷필요)
+             4. 변경사항 파일시스템 반영
+                    resize2fs /dev/vg01/app
+                    (ext4는 resize2fs 명령 사용)
     </div>
 
     <a href="../index.html">← 목록으로</a>
